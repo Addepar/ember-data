@@ -540,7 +540,7 @@ Store = Ember.Object.extend({
           adapter = this.adapterFor(type);
 
       Ember.assert("You tried to load many records but you have no adapter (for " + type + ")", adapter);
-      Ember.assert("You tried to load many records but your adapter does not implement `findMany`", adapter.findMany);
+      Ember.assert("You tried to load many records but your adapter does not implement `findMany`", typeof adapter.findMany === 'function');
 
       promises.push(_findMany(adapter, this, type, ids, owner));
     }, this);
