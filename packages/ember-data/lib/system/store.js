@@ -1661,6 +1661,10 @@ Store = Ember.Object.extend({
 
 
 function normalizeRelationships(store, type, data, record) {
+  if (type.detectDynamicType) {
+    type = type.detectDynamicType(data.type);
+  }
+
   type.eachRelationship(function(key, relationship) {
     var kind = relationship.kind;
     var value = data[key];
