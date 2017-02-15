@@ -115,7 +115,7 @@ export default Ember.Object.extend({
     var shouldBeInArray;
 
     if (!filter) {
-      shouldBeInArray = true;
+      shouldBeInArray = !get(record, 'isEmpty');
     } else {
       shouldBeInArray = filter(record);
     }
