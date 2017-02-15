@@ -914,6 +914,8 @@ var Model = Ember.Object.extend(Ember.Evented, {
     @method rollback
   */
   rollback: function() {
+    var dirtyKeys = Ember.keys(this._attributes);
+
     this._attributes = {};
 
     if (get(this, 'isError')) {
@@ -938,7 +940,7 @@ var Model = Ember.Object.extend(Ember.Evented, {
 
     this.send('rolledBack');
 
-    this._notifyProperties(Ember.keys(this._data));
+    this._notifyProperties(dirtyKeys);
 
   },
 
