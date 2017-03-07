@@ -34,6 +34,33 @@ function extractPivotName(name) {
   );
 }
 
+// Like Ember.merge, but instead returns a list of keys
+// for values that fail a strict equality check
+// instead of the original object.
+function mergeAndReturnChangedKeys(original, updates) {
+  var changedKeys = [];
+
+  if (!updates || typeof updates !== 'object') {
+    return changedKeys;
+  }
+
+  var keys   = Ember.keys(updates);
+  var length = keys.length;
+  var i, val, key;
+
+  for (i = 0; i < length; i++) {
+    key = keys[i];
+    val = updates[key];
+
+    if (original[key] !== val) {
+      changedKeys.push(key);
+    }
+
+    original[key] = val;
+  }
+  return changedKeys;
+}
+
 /**
 
   The model class that all Ember Data records descend from.
@@ -823,12 +850,13 @@ var Model = Ember.Object.extend(Ember.Evented, {
     @method adapterDidCommit
   */
   adapterDidCommit: function(data) {
+    var changedKeys;
     set(this, 'isError', false);
 
     if (data) {
-      this._data = data;
+      changedKeys = mergeAndReturnChangedKeys(this._data, data);
     } else {
-      Ember.mixin(this._data, this._inFlightAttributes);
+      Ember.merge(this._data, this._inFlightAttributes);
     }
 
     this._inFlightAttributes = {};
@@ -838,7 +866,7 @@ var Model = Ember.Object.extend(Ember.Evented, {
 
     if (!data) { return; }
 
-    this._notifyProperties(Ember.keys(data));
+    this._notifyProperties(changedKeys);
   },
 
   /**
@@ -873,15 +901,11 @@ var Model = Ember.Object.extend(Ember.Evented, {
   setupData: function(data, partial) {
     Ember.assert("Expected an object as `data` in `setupData`", Ember.typeOf(data) === 'object');
 
-    if (partial) {
-      Ember.merge(this._data, data);
-    } else {
-      this._data = data;
-    }
+    var changedKeys = mergeAndReturnChangedKeys(this._data, data);
 
     this.pushedData();
 
-    this._notifyProperties(Ember.keys(data));
+    this._notifyProperties(changedKeys);
   },
 
   materializeId: function(id) {
