@@ -283,7 +283,7 @@ BelongsToRelationship.prototype._super$addRecord = Relationship.prototype.addRec
 BelongsToRelationship.prototype.addRecord = function(newRecord) {
   if (this.members.has(newRecord)){ return;}
   var type = this.relationshipMeta.type;
-  Ember.assert("You can only add a '" + type.typeKey + "' record to this relationship", newRecord instanceof type || newRecord.constructor.superclass === type);
+  Ember.assert("You can only add a '" + type.typeKey + "' record to this relationship", newRecord instanceof type);
 
   if (this.inverseRecord) {
     this.removeRecord(this.inverseRecord);
