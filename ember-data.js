@@ -9731,19 +9731,8 @@
 
       flushCanonical: function () {
         this.willSync = false;
-        //a hack for not removing new records
-        //TODO remove once we have proper diffing
-        var newRecords = [];
-        for (var i = 0; i < this.members.list.length; i++) {
-          if (this.members.list[i].isNew()) {
-            newRecords.push(this.members.list[i]);
-          }
-        }
         //TODO(Igor) make this less abysmally slow
         this.members = this.canonicalMembers.copy();
-        for (i = 0; i < newRecords.length; i++) {
-          this.members.add(newRecords[i]);
-        }
       },
 
       flushCanonicalLater: function () {
@@ -9851,12 +9840,6 @@
           return !internalModel.isDeleted();
         });
 
-        //a hack for not removing new records
-        //TODO remove once we have proper diffing
-        var newRecords = this.currentState.filter(function (internalModel) {
-          return internalModel.isNew();
-        });
-        toSet = toSet.concat(newRecords);
         var oldLength = this.length;
         this.arrayContentWillChange(0, this.length, toSet.length);
         this.set('length', toSet.length);
