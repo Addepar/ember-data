@@ -15740,7 +15740,7 @@
         //TODO(Igor): Consider whether we could do this only if the record state is unloaded
 
         //Goes away once hasMany is double promisified
-        this.notifyPropertyChange(key);
+        this.notifyPropertyChange(key + '.[]');
       }
     });
 
