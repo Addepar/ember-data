@@ -1,0 +1,9 @@
+{
+  "name": "ember-data-v1.13.16-patched",
+  "version": "1.0.0",
+  "description": "A patched version of Ember Data",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Addepar/ember-data.git"
+  }
+}
