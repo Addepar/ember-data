@@ -14580,39 +14580,6 @@
     function ember$data$lib$initializers$data$adapter$$initializeDebugAdapter(registry) {
       registry.register('data-adapter:main', ember$data$lib$system$debug$debug$adapter$$default);
     }
-    var ember$data$lib$instance$initializers$initialize$store$service$$default = ember$data$lib$instance$initializers$initialize$store$service$$initializeStoreService;
-    /**
-     Configures a registry for use with an Ember-Data
-     store.
-
-     @method initializeStore
-     @param {Ember.ApplicationInstance} applicationOrRegistry
-     */
-    function ember$data$lib$instance$initializers$initialize$store$service$$initializeStoreService(applicationOrRegistry) {
-      var registry, container;
-      if (applicationOrRegistry.registry && applicationOrRegistry.container) {
-        // initializeStoreService was registered with an
-        // instanceInitializer. The first argument is the application
-        // instance.
-        registry = applicationOrRegistry.registry;
-        container = applicationOrRegistry.container;
-      } else {
-        // initializeStoreService was called by an initializer instead of
-        // an instanceInitializer. The first argument is a registy. This
-        // case allows ED to support Ember pre 1.12
-        registry = applicationOrRegistry;
-        if (registry.container) {
-          // Support Ember 1.10 - 1.11
-          container = registry.container();
-        } else {
-          // Support Ember 1.9
-          container = registry;
-        }
-      }
-
-      // Eagerly generate the store so defaultStore is populated.
-      container.lookup('service:store');
-    }
     var ember$data$lib$setup$container$$default = ember$data$lib$setup$container$$setupContainer;
     function ember$data$lib$setup$container$$setupContainer(registry, application) {
       // application is not a required argument. This ensures
@@ -14620,7 +14587,6 @@
       // entire ember application.
 
       ember$data$lib$setup$container$$initializeInjects(registry, application);
-      ember$data$lib$instance$initializers$initialize$store$service$$default(registry);
     }
 
     function ember$data$lib$setup$container$$initializeInjects(registry, application) {
@@ -14675,19 +14641,6 @@
         name: "ember-data",
         initialize: ember$data$lib$setup$container$$initializeInjects
       });
-
-      if (Application.instanceInitializer) {
-        Application.instanceInitializer({
-          name: "ember-data",
-          initialize: ember$data$lib$instance$initializers$initialize$store$service$$default
-        });
-      } else {
-        Application.initializer({
-          name: "ember-data-store-service",
-          after: "ember-data",
-          initialize: ember$data$lib$instance$initializers$initialize$store$service$$default
-        });
-      }
 
       // Deprecated initializers to satisfy old code that depended on them
       Application.initializer({
