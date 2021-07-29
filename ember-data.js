@@ -10581,6 +10581,7 @@
       this.isReloading = false;
       this.isError = false;
       this.error = null;
+      this._triggerDeferredTriggersScheduled = false;
       /*
         implicit relationships are relationship which have not been declared but the inverse side exists on
         another record somewhere
@@ -10934,21 +10935,18 @@
         throw new Ember.Error(errorMessage);
       },
 
-      triggerLater: function () {
-        var length = arguments.length;
-        var args = new Array(length);
-
-        for (var i = 0; i < length; i++) {
-          args[i] = arguments[i];
-        }
-
+      triggerLater: function (...args) {
         if (this._deferredTriggers.push(args) !== 1) {
           return;
         }
-        Ember.run.scheduleOnce('actions', this, '_triggerDeferredTriggers');
+        if (!this._triggerDeferredTriggersScheduled) {
+          this._triggerDeferredTriggersScheduled = true;
+          Ember.run.schedule('actions', this, '_triggerDeferredTriggers');
+        }
       },
 
       _triggerDeferredTriggers: function () {
+        this._triggerDeferredTriggersScheduled = false;
         //TODO: Before 1.0 we want to remove all the events that happen on the pre materialized record,
         //but for now, we queue up all the events triggered before the record was materialized, and flush
         //them once we have the record
