@@ -397,18 +397,18 @@ export default class Relationship {
     this.willSync = false;
     //a hack for not removing new internalModels
     //TODO remove once we have proper diffing
-    let newInternalModels = [];
-    for (let i = 0; i < list.length; i++) {
-      if (list[i].isNew()) {
-        newInternalModels.push(list[i]);
-      }
-    }
+    // let newInternalModels = [];
+    // for (let i = 0; i < list.length; i++) {
+    //   if (list[i].isNew()) {
+    //     newInternalModels.push(list[i]);
+    //   }
+    // }
 
     //TODO(Igor) make this less abysmally slow
     this.members = this.canonicalMembers.copy();
-    for (let i = 0; i < newInternalModels.length; i++) {
-      this.members.add(newInternalModels[i]);
-    }
+    // for (let i = 0; i < newInternalModels.length; i++) {
+    //   this.members.add(newInternalModels[i]);
+    // }
   }
 
   flushCanonicalLater() {
