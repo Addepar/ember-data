@@ -1,4 +1,4 @@
-import { assert } from '@ember/debug';
+import { assert, deprecate } from '@ember/debug';
 import { assertPolymorphicType } from 'ember-data/-debug';
 import { PromiseManyArray } from '../../promise-proxies';
 import Relationship from './relationship';
@@ -316,7 +316,10 @@ export default class ManyRelationship extends Relationship {
       }
       return this._updateLoadingPromise(promise, manyArray);
     } else {
-      assert(`You looked up the '${this.key}' relationship on a '${this.internalModel.type.modelName}' with id ${this.internalModel.id} but some of the associated records were not loaded. Either make sure they are all loaded together with the parent record, or specify that the relationship is async ('DS.hasMany({ async: true })')`, manyArray.isEvery('isEmpty', false));
+      deprecate(`You looked up the '${this.key}' relationship on a '${this.internalModel.type.modelName}' with id ${this.internalModel.id} but some of the associated records were not loaded. Either make sure they are all loaded together with the parent record, or specify that the relationship is async ('DS.hasMany({ async: true })')`, manyArray.isEvery('isEmpty', false), {
+        id: 'ds-patched.relationships.sync-hasMany-record-not-loaded',
+        until: '3.0.0'
+      });
 
       //TODO(Igor) WTF DO I DO HERE?
       // TODO @runspired equal WTFs to Igor

@@ -1,5 +1,5 @@
 import { Promise as EmberPromise } from 'rsvp';
-import { assert, inspect } from '@ember/debug';
+import { assert, inspect, deprecate } from '@ember/debug';
 import { assertPolymorphicType } from 'ember-data/-debug';
 import {
   PromiseObject
@@ -184,7 +184,10 @@ export default class BelongsToRelationship extends Relationship {
         return null;
       }
       let toReturn = this.inverseInternalModel.getRecord();
-      assert("You looked up the '" + this.key + "' relationship on a '" + this.internalModel.modelName + "' with id " + this.internalModel.id +  " but some of the associated records were not loaded. Either make sure they are all loaded together with the parent record, or specify that the relationship is async (`DS.belongsTo({ async: true })`)", toReturn === null || !toReturn.get('isEmpty'));
+      deprecate("You looked up the '" + this.key + "' relationship on a '" + this.internalModel.modelName + "' with id " + this.internalModel.id +  " but some of the associated records were not loaded. Either make sure they are all loaded together with the parent record, or specify that the relationship is async (`DS.belongsTo({ async: true })`)", toReturn === null || !toReturn.get('isEmpty'), {
+        id: 'ds-patched.relationships.sync-belongsTo-record-not-loaded',
+        until: '3.0.0'
+      });
       return toReturn;
     }
   }
