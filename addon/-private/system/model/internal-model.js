@@ -7,7 +7,7 @@ import { run } from '@ember/runloop';
 import RSVP, { Promise } from 'rsvp';
 import Ember from 'ember';
 import { DEBUG } from '@glimmer/env';
-import { assert, inspect } from '@ember/debug';
+import { assert, deprecate, inspect } from '@ember/debug';
 import RootState from "./states";
 import Relationships from "../relationships/state/create";
 import Snapshot from "../snapshot";
@@ -1026,7 +1026,10 @@ export default class InternalModel {
   }
 
   setId(id) {
-    assert('A record\'s id cannot be changed once it is in the loaded state', this.id === null || this.id === id || this.isNew());
+    deprecate('A record\'s id cannot be changed once it is in the loaded state', this.id === null || this.id === id || this.isNew(), {
+      id: 'ds-patched.store.cannot-change-id-of-loaded-recorded',
+      until: '3.0.0'
+    });
     this.id = id;
     if (this._record.get('id') !== id) {
       this._record.set('id', id);

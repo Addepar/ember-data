@@ -684,7 +684,10 @@ Store = Service.extend({
   findRecord(modelName, id, options) {
     assert(`You need to pass a model name to the store's findRecord method`, isPresent(modelName));
     assert(`Passing classes to store methods has been removed. Please pass a dasherized string instead of ${modelName}`, typeof modelName === 'string');
-    assert(badIdFormatAssertion, (typeof id === 'string' && id.length > 0) || (typeof id === 'number' && !isNaN(id)));
+    deprecate(badIdFormatAssertion, (typeof id === 'string' && id.length > 0) || (typeof id === 'number' && !isNaN(id)), {
+      id: 'ds-patched.store.findRecord-id-must-be-valid',
+      until: '3.0.0'
+    });
 
     let normalizedModelName = normalizeModelName(modelName);
 
@@ -1043,7 +1046,10 @@ Store = Service.extend({
   peekRecord(modelName, id) {
     heimdall.increment(peekRecord);
     assert(`You need to pass a model name to the store's peekRecord method`, isPresent(modelName));
-    assert(`You need to pass both a model name and id to the store's peekRecord method`, isPresent(modelName) && isPresent(id));
+    deprecate(`You need to pass both a model name and id to the store's peekRecord method`, isPresent(modelName) && isPresent(id), {
+      id: 'ds-patched.store.peekRecord-id-must-be-valid',
+      until: '3.0.0'
+    });
     assert(`Passing classes to store methods has been removed. Please pass a dasherized string instead of ${modelName}`, typeof modelName === 'string');
     let normalizedModelName = normalizeModelName(modelName);
 
@@ -1922,7 +1928,10 @@ Store = Service.extend({
       this.updateId(internalModel, data);
       this._setupRelationshipsForModel(internalModel, data);
     } else {
-      assert(`Your ${internalModel.modelName} record was saved to the server, but the response does not have an id and no id has been set client side. Records must have ids. Please update the server response to provide an id in the response or generate the id on the client side either before saving the record or while normalizing the response.`, internalModel.id);
+      deprecate(`Your ${internalModel.modelName} record was saved to the server, but the response does not have an id and no id has been set client side. Records must have ids. Please update the server response to provide an id in the response or generate the id on the client side either before saving the record or while normalizing the response.`, internalModel.id, {
+        id: 'ds-patched.store.saved-record-has-no-id',
+        until: '3.0.0'
+      });
     }
 
     //We first make sure the primary data has been updated
@@ -1974,10 +1983,24 @@ Store = Service.extend({
     let id = coerceId(data.id);
 
     // ID absolutely can't be missing if the oldID is empty (missing Id in response for a new record)
-    assert(`'${modelName}' was saved to the server, but the response does not have an id and your record does not either.`, !(id === null && oldId === null));
+    if (id === null && oldId === null) {
+      deprecate(`'${modelName}' was saved to the server, but the response does not have an id and your record does not either.`, false, {
+        id: 'ds-patched.store.new-record-has-no-id',
+        until: '3.0.0'
+      });
+
+      return;
+    }
 
     // ID absolutely can't be different than oldID if oldID is not null
-    assert(`'${modelName}:${oldId}' was saved to the server, but the response returned the new id '${id}'. The store cannot assign a new id to a record that already has an id.`, !(oldId !== null && id !== oldId));
+    if (oldId !== null && id !== oldId) {
+      deprecate(`'${modelName}:${oldId}' was saved to the server, but the response returned the new id '${id}'. The store cannot assign a new id to a record that already has an id.`, false, {
+        id: 'ds-patched.store.record-id-changed',
+        until: '3.0.0'
+      });
+
+      return;
+    }
 
     // ID can be null if oldID is not null (altered ID in response for a record)
     // however, this is more than likely a developer error.
@@ -1988,8 +2011,12 @@ Store = Service.extend({
 
     let existingInternalModel = this._existingInternalModelForId(modelName, id);
 
-    assert(`'${modelName}' was saved to the server, but the response returned the new id '${id}', which has already been used with another record.'`,
-      isNone(existingInternalModel) || existingInternalModel === internalModel);
+    deprecate(`'${modelName}' was saved to the server, but the response returned the new id '${id}', which has already been used with another record.'`,
+      isNone(existingInternalModel) || existingInternalModel === internalModel, {
+        id: 'ds-patched.store.record-id-already-used',
+        until: '3.0.0'
+      }
+    );
 
     this._internalModelsFor(internalModel.modelName).set(id, internalModel);
 
