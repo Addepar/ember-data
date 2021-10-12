@@ -8773,7 +8773,6 @@
         // EVENTS
         deleteRecord: function (internalModel) {
           internalModel.transitionTo('deleted.uncommitted');
-          internalModel.disconnectRelationships();
         },
 
         didSetProperty: function (internalModel, context) {
@@ -8858,7 +8857,6 @@
     });
 
     ember$data$lib$system$model$states$$createdState.uncommitted.deleteRecord = function (internalModel) {
-      internalModel.disconnectRelationships();
       internalModel.transitionTo('deleted.saved');
       internalModel.send('invokeLifecycleCallbacks');
     };
@@ -8883,7 +8881,6 @@
 
     ember$data$lib$system$model$states$$updatedState.uncommitted.deleteRecord = function (internalModel) {
       internalModel.transitionTo('deleted.uncommitted');
-      internalModel.disconnectRelationships();
     };
 
     var ember$data$lib$system$model$states$$RootState = {
@@ -9019,7 +9016,6 @@
 
           deleteRecord: function (internalModel) {
             internalModel.transitionTo('deleted.uncommitted');
-            internalModel.disconnectRelationships();
           },
 
           unloadRecord: function (internalModel) {
@@ -9132,6 +9128,7 @@
           isDirty: false,
 
           setup: function (internalModel) {
+            internalModel.clearRelationships();
             var store = internalModel.store;
             store._dematerializeRecord(internalModel);
           },
@@ -9246,18 +9243,6 @@
         }
       },
 
-      disconnect: function () {
-        this.members.forEach(function (member) {
-          this.removeRecordFromInverse(member);
-        }, this);
-      },
-
-      reconnect: function () {
-        this.members.forEach(function (member) {
-          this.addRecordToInverse(member);
-        }, this);
-      },
-
       removeRecords: function (records) {
         var self = this;
         ember$data$lib$system$relationships$state$relationship$$forEach.call(records, function (record) {
@@ -9352,12 +9337,6 @@
               record._implicitRelationships[this.inverseKeyForImplicit].removeRecord(this.record);
             }
           }
-        }
-      },
-
-      addRecordToInverse: function (record) {
-        if (this.inverseKey) {
-          record._relationships.get(this.inverseKey).addRecord(this.record);
         }
       },
 
@@ -9874,9 +9853,11 @@
       return this.store.findMany(ember$data$lib$system$relationships$state$has$many$$map.call(manyArray.toArray(), function (rec) {
         return rec._internalModel;
       })).then(function () {
-        //Goes away after the manyArray refactor
-        manyArray.set('isLoaded', true);
-        return manyArray;
+        if (!manyArray.get('isDestroyed')) {
+          //Goes away after the manyArray refactor
+          manyArray.set('isLoaded', true);
+          return manyArray;
+        }
       });
     };
     ember$data$lib$system$relationships$state$has$many$$ManyRelationship.prototype.notifyHasManyChanged = function () {
@@ -10855,7 +10836,6 @@
         if (this.isDeleted()) {
           //TODO: Should probably move this to the state machine somehow
           this.becameReady();
-          this.reconnectRelationships();
         }
 
         if (this.isNew()) {
@@ -10967,7 +10947,6 @@
         this.eachRelationship(function (name, relationship) {
           if (this._relationships.has(name)) {
             var rel = this._relationships.get(name);
-            //TODO(Igor) figure out whether we want to clear or disconnect
             rel.clear();
             rel.destroy();
           }
@@ -10976,26 +10955,6 @@
         ember$data$lib$system$model$internal$model$$forEach.call(ember$data$lib$system$object$polyfills$$keysFunc(this._implicitRelationships), function (key) {
           model._implicitRelationships[key].clear();
           model._implicitRelationships[key].destroy();
-        });
-      },
-
-      disconnectRelationships: function () {
-        this.eachRelationship(function (name, relationship) {
-          this._relationships.get(name).disconnect();
-        }, this);
-        var model = this;
-        ember$data$lib$system$model$internal$model$$forEach.call(ember$data$lib$system$object$polyfills$$keysFunc(this._implicitRelationships), function (key) {
-          model._implicitRelationships[key].disconnect();
-        });
-      },
-
-      reconnectRelationships: function () {
-        this.eachRelationship(function (name, relationship) {
-          this._relationships.get(name).reconnect();
-        }, this);
-        var model = this;
-        ember$data$lib$system$model$internal$model$$forEach.call(ember$data$lib$system$object$polyfills$$keysFunc(this._implicitRelationships), function (key) {
-          model._implicitRelationships[key].reconnect();
         });
       },
 
