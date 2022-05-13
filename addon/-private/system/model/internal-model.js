@@ -332,7 +332,7 @@ export default class InternalModel {
   }
 
   getRecord(properties) {
-    if (!this._record && !this._isDematerializing) {
+    if (!this._record && !this._isDematerializing && !this.isDestroyed) {
       heimdall.increment(materializeRecord);
       let token = heimdall.start('InternalModel.getRecord');
 
