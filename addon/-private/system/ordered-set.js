@@ -1,7 +1,5 @@
 import { guidFor } from '@ember/object/internals';
-import Ember from 'ember';
-
-const EmberOrderedSet = Ember.OrderedSet;
+import EmberOrderedSet from '@ember/ordered-set';
 
 export default function OrderedSet() {
   this._super$constructor();
