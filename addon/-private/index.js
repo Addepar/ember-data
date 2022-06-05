@@ -1,3 +1,6 @@
+// @ember/map and @ember/map/with-defaults polyfills
+export { Map, MapWithDefault } from './system/map';
+
 // public
 export { default as Model } from './system/model/model';
 export { default as Errors } from './system/model/errors';

@@ -4,7 +4,7 @@ import ArrayProxy from '@ember/array/proxy';
 import { set, get, computed } from '@ember/object';
 import { isEmpty } from '@ember/utils';
 import { makeArray, A } from '@ember/array';
-import MapWithDefault from '@ember/map/with-default';
+import { MapWithDefault } from '../map';
 import { deprecate, warn } from '@ember/debug';
 
 /**

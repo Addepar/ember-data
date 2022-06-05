@@ -8,7 +8,7 @@ import EmberObject, {
   get,
   observer
 } from '@ember/object';
-import Map from '@ember/map';
+import { Map } from '../map';
 import Ember from 'ember';
 import { DEBUG } from '@glimmer/env';
 import { assert, deprecate, warn } from '@ember/debug';

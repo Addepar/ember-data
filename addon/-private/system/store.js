@@ -4,7 +4,7 @@
 
 import { A } from '@ember/array';
 import EmberError from '@ember/error';
-import MapWithDefault from '@ember/map/with-default';
+import { MapWithDefault } from './map';
 import { run as emberRun } from '@ember/runloop';
 import { set, get, computed } from '@ember/object';
 import { assign } from '@ember/polyfills';

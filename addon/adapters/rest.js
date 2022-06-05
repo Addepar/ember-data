@@ -6,11 +6,11 @@
 import $ from 'jquery';
 
 import { Promise as EmberPromise } from 'rsvp';
-import MapWithDefault from '@ember/map/with-default';
 import { get } from '@ember/object';
 import { run } from '@ember/runloop';
 import Adapter from "../adapter";
 import {
+  MapWithDefault,
   parseResponseHeaders,
   BuildURLMixin,
   isEnabled,

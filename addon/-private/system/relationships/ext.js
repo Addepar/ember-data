@@ -1,7 +1,6 @@
 import { A } from '@ember/array';
 import { computed } from '@ember/object';
-import MapWithDefault from '@ember/map/with-default';
-import Map from '@ember/map';
+import { Map, MapWithDefault } from '../map';
 import Ember from 'ember';
 import { assert } from '@ember/debug';
 import {
