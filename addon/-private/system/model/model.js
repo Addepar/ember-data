@@ -22,6 +22,8 @@ import {
   relationshipsDescriptor
 } from '../relationships/ext';
 
+const { descriptorForProperty } = Ember.__loader.require('@ember/-internals/metal');
+
 /**
   @module ember-data
 */
@@ -1918,20 +1920,11 @@ if (DEBUG) {
      @param {String} key
      @param {Ember.ComputedProperty} value
      */
-    didDefineProperty(proto, key, value) {
-      // Check if the value being set is a computed property.
-      if (value instanceof ComputedProperty) {
+    didDefineProperty(proto, key) {
+      let desc = descriptorForProperty(proto, key);
 
-        // If it is, get the metadata for the relationship. This is
-        // populated by the `DS.belongsTo` helper when it is creating
-        // the computed property.
-        let meta = value.meta();
-
-        /*
-          This is buggy because if the parent has never been looked up
-          via `modelFor` it will not have `modelName` set.
-         */
-        meta.parentType = proto.constructor;
+      if (desc && desc._meta) {
+        desc._meta.parentType = proto.constructor;
       }
     }
   });
