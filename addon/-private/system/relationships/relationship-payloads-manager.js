@@ -1,6 +1,6 @@
 import { get } from '@ember/object';
 // import { DEBUG } from '@glimmer/env';
-import { deprecate } from '@ember/debug';
+import { assert } from '@ember/debug';
 import { default as RelationshipPayloads, TypeCache } from './relationship-payloads';
 
 /**
@@ -250,14 +250,7 @@ export default class RelationshipPayloadsManager {
       inverseCache.get(inverseBaseModelName, inverseRelationshipName);
     if (cached) {
       // TODO this assert can be removed if the above assert is enabled
-      if (cached.hasInverse === false) {
-        deprecate(`The ${inverseBaseModelName}:${inverseRelationshipName} relationship declares 'inverse: null', but it was resolved as the inverse for ${baseModelName}:${relationshipName}.`, false, {
-          id: 'ds-patched.relationships.one-sided-inverse',
-          until: '3.0.0'
-        });
-
-        return null;
-      }
+      assert(`The ${inverseBaseModelName}:${inverseRelationshipName} relationship declares 'inverse: null', but it was resolved as the inverse for ${baseModelName}:${relationshipName}.`, cached.hasInverse !== false);
 
       let isLHS = cached.lhs_baseModelName === baseModelName;
       let modelNames = isLHS ? cached.lhs_modelNames : cached.rhs_modelNames;
