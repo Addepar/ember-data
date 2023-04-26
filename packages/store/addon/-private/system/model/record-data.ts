@@ -201,6 +201,9 @@ export default class RecordDataDefault implements RelationshipRecordData {
               )}, but ${relationshipName} is a belongsTo relationship so the value must not be an array. You should probably check your data payload or serializer.`,
               !Array.isArray(relationshipData.data)
             );
+            if (relationshipData.data) {
+              relationshipData.data.id = coerceId(relationshipData.data.id);
+            }
             assertRelationshipData(storeWrapper, recordData, relationshipData.data, relationshipMeta);
           } else if (relationshipMeta.kind === 'hasMany') {
             assert(
@@ -213,6 +216,9 @@ export default class RecordDataDefault implements RelationshipRecordData {
             );
             if (Array.isArray(relationshipData.data)) {
               for (let i = 0; i < relationshipData.data.length; i++) {
+                if (relationshipData.data[i]) {
+                  relationshipData.data[i].id = coerceId(relationshipData.data[i].id);
+                }
                 assertRelationshipData(storeWrapper, recordData, relationshipData.data[i], relationshipMeta);
               }
             }
