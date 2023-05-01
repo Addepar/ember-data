@@ -326,7 +326,7 @@ export default class InternalModel {
   }
 
   getRecord(properties?) {
-    if (!this._record && !this._isDematerializing) {
+    if (!this._record && !this._isDematerializing && !this.isDestroyed) {
       let { store } = this;
 
       // lookupFactory should really return an object that creates
