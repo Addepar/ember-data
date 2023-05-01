@@ -1266,10 +1266,18 @@ export default class InternalModel {
     );
     let didChange = id !== this.id;
 
+    let oldId = this.id;
     this.id = id;
 
     if (didChange && id !== null) {
-      this.store.setRecordId(this.modelName, id, this.clientId);
+      if (oldId === null) {
+        this.store.setRecordId(this.modelName, id, this.clientId);
+      } else {
+        let modelMap = internalModelFactoryFor(this.store).modelMapFor(this.modelName);
+        modelMap._idToModel[id] = modelMap._idToModel[oldId];
+        delete modelMap._idToModel[oldId];
+      }
+
       // internal set of ID to get it to RecordData from DS.Model
       if (this._recordData.__setId) {
         this._recordData.__setId(id);
