@@ -1,53 +1,36 @@
-ember-data
-==============================================================================
+# Ember Data v3.12.6-patched
 
-[![Build Status](https://secure.travis-ci.org/emberjs/data.svg?branch=master)](http://travis-ci.org/emberjs/data)
-[![Code Climate](https://codeclimate.com/github/emberjs/data/badges/gpa.svg)](https://codeclimate.com/github/emberjs/data)
-[![Discord Community Server](https://img.shields.io/discord/480462759797063690.svg?logo=discord)](https://discord.gg/zT3asNS)
+## Releasing a new version
 
-`ember-data` is a library for robustly managing data in applications built with
-[Ember.js](https://github.com/emberjs/ember.js/).
+These release steps assume that only the `@ember-data/store` package has been modified.
 
-`ember-data` is designed to be agnostic to the underlying persistence
-mechanism, so it works just as well with `JSON API` over `HTTP` as it does
-with streaming `WebSockets` or local `IndexedDB` storage.
+1. Commit your code changes to the [v3.12.6-patched](https://github.com/Addepar/ember-data/commits/v3.12.6-patched) branch.
+2. From the root of this repo, run:
+   ```
+   yarn workspace @ember-data/store pack
+   ```
+3. Commit the generated file:
+   ```
+   git add -A
+   git commit -m "Update @ember-data/store tarball"
+   ```
+4. Push your branch to GitHub.
+5. In Iverson, change the `@ember-data/store` version in `package.json`'s `resolutions` section to point to the new git SHA, e.g. 
+   ```
+   "@ember-data/store": "https://github.com/Addepar/ember-data/raw/889a9695079e4a14ef13feca1c7bd8c72a50303b/packages/store/ember-data-store-3.12.6.tgz"
+   ```
 
-It provides many of the facilities you'd find in server-side `ORM`s like
-`ActiveRecord`, but is designed specifically for the unique environment of
-`JavaScript` in the browser.
+## Linking to Iverson
 
-- [Usage Guide](https://guides.emberjs.com/release/models/)
-- [API Documentation](https://emberjs.com/api/ember-data/release/modules/ember-data)
-- [Contributing Guide](./CONTRIBUTING.md)
-- [RFCs](https://github.com/emberjs/rfcs/labels/T-ember-data)
-- [Community](https://emberjs.com/community)
-- [Team](https://emberjs.com/team)
-- [Blog](https://emberjs.com/blog)
+In the root of this repo, run:
 
-
-Installation
-------------------------------------------------------------------------------
-
-`ember-data` is installed by default for new applications generated with `ember-cli`.
-
-If you wish to add `ember-data` to an `addon` or `application`, you can do so by running
-the following command, which will use `yarn` or `npm` to install `ember-data` as a `devDependency`.
-
-```no-highlight
-ember install ember-data
+```
+yarn install
+yarn workspace ember-data link
 ```
 
-Similarly, if you have generated a new `Ember` application using `ember-cli` but do 
-not wish to use `ember-data`, remove `ember-data` from your `package.json`.
+In the root of the Iverson repo, run:
 
-
-Contributing
-------------------------------------------------------------------------------
-
-See the [Contributing](CONTRIBUTING.md) guide for details.
-
-
-License
-------------------------------------------------------------------------------
-
-This project is licensed under the [MIT License](LICENSE.md).
+```
+yarn link "ember-data"
+```
