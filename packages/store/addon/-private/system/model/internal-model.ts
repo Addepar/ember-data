@@ -651,7 +651,7 @@ export default class InternalModel {
       } else {
         let internalModel = store._internalModelForResource(resource.data);
         let toReturn = internalModel.getRecord();
-        assert(
+        deprecate(
           "You looked up the '" +
             key +
             "' relationship on a '" +
@@ -659,7 +659,11 @@ export default class InternalModel {
             "' with id " +
             parentInternalModel.id +
             ' but some of the associated records were not loaded. Either make sure they are all loaded together with the parent record, or specify that the relationship is async (`belongsTo({ async: true })`)',
-          toReturn === null || !toReturn.get('isEmpty')
+          toReturn === null || !toReturn.get('isEmpty'),
+          {
+            id: 'ds-patched.relationships.sync-belongsTo-record-not-loaded',
+            until: '3.0.0',
+          }
         );
         return toReturn;
       }
