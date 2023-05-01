@@ -536,19 +536,19 @@ export default class Relationship {
     this.willSync = false;
     //a hack for not removing new RecordDatas
     //TODO remove once we have proper diffing
-    let newRecordDatas: RelationshipRecordData[] = [];
-    for (let i = 0; i < list.length; i++) {
-      // TODO Igor deal with this
-      if (list[i].isNew()) {
-        newRecordDatas.push(list[i]);
-      }
-    }
+    // let newRecordDatas: RelationshipRecordData[] = [];
+    // for (let i = 0; i < list.length; i++) {
+    //   // TODO Igor deal with this
+    //   if (list[i].isNew()) {
+    //     newRecordDatas.push(list[i]);
+    //   }
+    // }
 
     //TODO(Igor) make this less abysmally slow
     this.members = this.canonicalMembers.copy();
-    for (let i = 0; i < newRecordDatas.length; i++) {
-      this.members.add(newRecordDatas[i]);
-    }
+    // for (let i = 0; i < newRecordDatas.length; i++) {
+    //   this.members.add(newRecordDatas[i]);
+    // }
   }
 
   flushCanonicalLater() {

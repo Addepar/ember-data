@@ -109,19 +109,19 @@ export default class ManyRelationship extends Relationship {
   }
 
   flushCanonical() {
-    let toSet = this.canonicalState;
+    let toSet = this.canonicalState.filter(recordData => !recordData.isDeleted!());
 
     //a hack for not removing new records
     //TODO remove once we have proper diffing
-    let newRecordDatas = this.currentState.filter(
-      // only add new internalModels which are not yet in the canonical state of this
-      // relationship (a new internalModel can be in the canonical state if it has
-      // been 'acknowleged' to be in the relationship via a store.push)
+    // let newRecordDatas = this.currentState.filter(
+    //   // only add new internalModels which are not yet in the canonical state of this
+    //   // relationship (a new internalModel can be in the canonical state if it has
+    //   // been 'acknowleged' to be in the relationship via a store.push)
 
-      //TODO Igor deal with this
-      recordData => recordData.isNew() && toSet.indexOf(recordData) === -1
-    );
-    toSet = toSet.concat(newRecordDatas);
+    //   //TODO Igor deal with this
+    //   recordData => recordData.isNew() && toSet.indexOf(recordData) === -1
+    // );
+    // toSet = toSet.concat(newRecordDatas);
 
     /*
     if (this._manyArray) {
