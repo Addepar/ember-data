@@ -62,7 +62,7 @@ export default EmberObject.extend({
         } else {
           return payload.reduce(function(documentHash, item) {
             let { data, included } = this.normalize(primaryModelClass, item);
-            documentHash.included.push(...included);
+            documentHash.included = documentHash.included.concat(included);
             documentHash.data.push(data);
             return documentHash;
           }, { data: [], included: [] })
