@@ -35,3 +35,6 @@
 
 # whitelist yuidoc's data.json for api docs generation
 !/dist/docs/data.json
+
+# patch tarballs
+/*.tgz
