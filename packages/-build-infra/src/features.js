@@ -5,9 +5,8 @@ function isCanary() {
   return version.indexOf('alpha') !== -1;
 }
 
-const requireEsm = require('esm')(module);
 function getFeatures() {
-  const { default: features } = requireEsm('@ember-data/canary-features/addon/default-features.js');
+  const { default: features } = require('@ember-data/canary-features/addon/default-features.js');
 
   if (!isCanary) {
     return features;
