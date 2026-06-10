@@ -1,6 +1,5 @@
 import coerceId from '../coerce-id';
 import { assert, warn } from '@ember/debug';
-import { deprecate } from '@ember/application/deprecations';
 import InternalModel from '../model/internal-model';
 import Store from '../store';
 import IdentityMap from '../identity-map';
@@ -144,13 +143,9 @@ export default class InternalModelFactory {
 
     let existingInternalModel = this.peekIdOnly(modelName, id);
 
-    deprecate(
+    assert(
       `'${modelName}' was saved to the server, but the response returned the new id '${id}', which has already been used with another record.'`,
-      isNone(existingInternalModel) || existingInternalModel === internalModel,
-      {
-        id: 'ds-patched.store.record-id-already-used',
-        until: '4.0.0',
-      }
+      isNone(existingInternalModel) || existingInternalModel === internalModel
     );
 
     this.modelMapFor(internalModel.modelName).set(id, internalModel);

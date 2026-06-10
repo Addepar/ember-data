@@ -1,5 +1,4 @@
 import { assert } from '@ember/debug';
-import { deprecate } from '@ember/application/deprecations';
 import InternalModel from './model/internal-model';
 import { ConfidentDict } from '../ts-interfaces/utils';
 
@@ -51,13 +50,9 @@ export default class InternalModelMap {
       `You cannot set an index for an internalModel that is not in the InternalModelMap`,
       this.contains(internalModel)
     );
-    deprecate(
+    assert(
       `You cannot update the id index of an InternalModel once set. Attempted to update ${id}.`,
-      !this.has(id) || this.get(id) === internalModel,
-      {
-        id: 'ds-patched.model.cannot-update-id-once-set',
-        until: '4.0.0',
-      }
+      !this.has(id) || this.get(id) === internalModel
     );
 
     this._idToModel[id] = internalModel;
