@@ -332,7 +332,7 @@ export default class InternalModel {
         false,
         {
           id: 'ds-patched.model.is-destroyed',
-          until: '4.0.0',
+          until: '3.28',
         }
       );
     }
