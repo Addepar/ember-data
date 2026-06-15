@@ -326,6 +326,16 @@ export default class InternalModel {
   }
 
   getRecord(properties?) {
+    if (this.isDestroyed) {
+      deprecate(
+        `Called getRecord on a destroyed InternalModel (${this.modelName}:${this.id}). This will throw in a future version.`,
+        false,
+        {
+          id: 'ds-patched.model.is-destroyed',
+          until: '3.28',
+        }
+      );
+    }
     if (!this._record && !this._isDematerializing && !this.isDestroyed) {
       let { store } = this;
 
